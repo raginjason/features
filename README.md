@@ -14,7 +14,7 @@ Installs yadm and optionally clones a dotfiles repository.
 {
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
-        "ghcr.io/your-org/your-repo/yadm:1": {
+        "ghcr.io/raginjason/features/yadm:1": {
             "repositoryUrl": "https://github.com/username/dotfiles.git"
         }
     }
