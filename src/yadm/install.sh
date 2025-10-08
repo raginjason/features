@@ -14,7 +14,7 @@ REPOSITORY_URL="${REPOSITORYURL:-}"
 echo "Installing yadm..."
 
 # Download and install yadm
-curl -fLo /usr/local/bin/yadm https://github.com/yadm-dev/yadm/raw/master/yadm
+curl -fsSL -o /usr/local/bin/yadm https://github.com/yadm-dev/yadm/raw/master/yadm
 chmod a+x /usr/local/bin/yadm
 
 # Verify installation
