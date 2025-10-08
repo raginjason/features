@@ -4,7 +4,7 @@
 
 **Version:** `1.0.0`
 
-**Description:** Install yadm (Yet Another Dotfiles Manager) for managing dotfiles in a git repository.
+**Description:** Install yadm (Yet Another Dotfiles Manager) for managing dotfiles in a git repository. This feature exists because the way VS Code dotfiles clones repositories is not usable in the way that yadm expects. As such, this feature should be used *instead of* the `dotfiles.installCommand`, `dotfiles.repository`, and `dotfiles.targetPath` settings.
 
 ## Usage
 
