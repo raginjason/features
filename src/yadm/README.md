@@ -8,11 +8,27 @@
 
 ## Usage
 
+To add this feature to a defined devcontainer:
+
 ```json
 {
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
-        "ghcr.io/raginjason/features/yadm:1": {}
+        "ghcr.io/raginjason/features/yadm:1": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git"
+        }
+    }
+}
+```
+
+More likely, you will want your yadm dotfiles to be used in every dev container via `dev.containers.defaultFeatures`, so add this to your `settings.json`:
+
+```json
+{
+    "dev.containers.defaultFeatures": {
+        "ghcr.io/raginjason/features/yadm:1": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git"
+        }
     }
 }
 ```
