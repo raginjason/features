@@ -8,7 +8,26 @@
 
 ## Usage
 
-To add this feature to a defined devcontainer:
+To simply install yadm in an existing devcontainer:
+
+ ```json
+ {
+     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+     "features": {
+        "ghcr.io/raginjason/features/yadm:1": {}
+    }
+}
+```
+
+## Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `repositoryUrl` | string | `""` | Git repository URL to clone with yadm. If provided, `yadm clone <url>` will be executed after installation. |
+
+## Example with Repository URL
+
+To add this feature to an existing devcontainer with your dotfiles:
 
 ```json
 {
@@ -28,25 +47,6 @@ More likely, you will want your yadm dotfiles to be used in every dev container 
     "dev.containers.defaultFeatures": {
         "ghcr.io/raginjason/features/yadm:1": {
             "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git"
-        }
-    }
-}
-```
-
-## Options
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `repositoryUrl` | string | `""` | Git repository URL to clone with yadm. If provided, `yadm clone <url>` will be executed after installation. |
-
-## Example with Repository URL
-
-```json
-{
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/raginjason/features/yadm:1": {
-            "repositoryUrl": "https://github.com/username/dotfiles.git"
         }
     }
 }
