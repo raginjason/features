@@ -41,8 +41,7 @@
 This feature:
 
 1. **Installs yadm**: Downloads and installs the latest version of yadm from the official repository
-2. **Installs dependencies**: Ensures `curl` and `git` are available
-3. **Clones dotfiles repository** (optional): If a `repositoryUrl` is provided, it will run `yadm clone <url>` to set up your dotfiles
+2. **Clones dotfiles repository** (optional): If a `repositoryUrl` is provided, it will run `yadm clone <url>` to set up your dotfiles
 
 ## About yadm
 
