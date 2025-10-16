@@ -1,7 +1,7 @@
 {
     "name": "Yet Another Dotfiles Manager (yadm)",
     "id": "yadm",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Install yadm (Yet Another Dotfiles Manager) for managing dotfiles in a git repository",
     "documentationURL": "https://yadm.io/",
     "options": {
