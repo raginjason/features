@@ -37,7 +37,9 @@ if [ -n "${REPOSITORY_URL}" ]; then
         if getent passwd 1000 > /dev/null 2>&1; then
             NON_ROOT_USER=$(getent passwd 1000 | cut -d: -f1)
             echo "Running yadm clone as user: ${NON_ROOT_USER}"
-            su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'" || true  # Ignore clone errors
+            set +e
+            su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
+            set -e
 
             # Configure local.class if provided
             if [ -n "${LOCAL_CLASS}" ]; then
@@ -52,7 +54,9 @@ if [ -n "${REPOSITORY_URL}" ]; then
         fi
     else
         # We're not root, so run yadm clone directly
-        yadm clone "${REPOSITORY_URL}" || true  # Ignore clone errors
+        set +e
+        yadm clone "${REPOSITORY_URL}"
+        set -e
 
         # Configure local.class if provided
         if [ -n "${LOCAL_CLASS}" ]; then
