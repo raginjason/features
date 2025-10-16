@@ -9,6 +9,11 @@
             "type": "string",
             "default": "",
             "description": "Git repository URL to clone with yadm. If provided, 'yadm clone <url>' will be executed after installation."
+        },
+        "localClass": {
+            "type": "string",
+            "default": "",
+            "description": "Yadm config local.class value. If provided, 'yadm config local.class <localClass>' will be executed after clone."
         }
     },
     "installsAfter": [

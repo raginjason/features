@@ -5,8 +5,9 @@ set -e
 # Activate feature 'yadm'
 echo "Activating feature 'yadm'"
 
-# The option REPOSITORYURL will be available as an env var in install.sh
+# The options will be available as env vars in install.sh
 REPOSITORY_URL="${REPOSITORYURL:-}"
+LOCAL_CLASS="${LOCALCLASS:-}"
 
 # Dependencies (curl and git) should be available via common-utils and git features
 
@@ -37,6 +38,13 @@ if [ -n "${REPOSITORY_URL}" ]; then
             NON_ROOT_USER=$(getent passwd 1000 | cut -d: -f1)
             echo "Running yadm clone as user: ${NON_ROOT_USER}"
             su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
+
+            # Configure local.class if provided
+            if [ -n "${LOCAL_CLASS}" ]; then
+                echo "Setting yadm local.class to: ${LOCAL_CLASS}"
+                su - "${NON_ROOT_USER}" -c "yadm config local.class '${LOCAL_CLASS}'"
+            fi
+
             su - "${NON_ROOT_USER}" -c "yadm status"
         else
             echo "Warning: Running as root. Consider creating a non-root user for yadm operations."
@@ -45,6 +53,13 @@ if [ -n "${REPOSITORY_URL}" ]; then
     else
         # We're not root, so run yadm clone directly
         yadm clone "${REPOSITORY_URL}"
+
+        # Configure local.class if provided
+        if [ -n "${LOCAL_CLASS}" ]; then
+            echo "Setting yadm local.class to: ${LOCAL_CLASS}"
+            yadm config local.class "${LOCAL_CLASS}"
+        fi
+
         yadm status
     fi
 else

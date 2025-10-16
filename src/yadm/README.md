@@ -23,7 +23,8 @@ To simply install yadm in an existing devcontainer:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `repositoryUrl` | string | `""` | Git repository URL to clone with yadm. If provided, `yadm clone <url>` will be executed after installation. |
+| `repositoryUrl` | string | `""` | The URL of the git repository to clone with yadm. If specified, `yadm clone <repositoryUrl>` will be executed after yadm is installed. |
+| `localClass`    | string | `""` | Optional class name for the local machine. If set, runs `yadm config local.class <localClass>` to enable machine-specific configuration. |
 
 ## Example with Repository URL
 
@@ -52,12 +53,26 @@ More likely, you will want your yadm dotfiles to be used in every dev container 
 }
 ```
 
+Or with a `local.class` as well
+
+```json
+{
+    "dev.containers.defaultFeatures": {
+        "ghcr.io/raginjason/features/yadm:1": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git",
+            "localClass": "Work"
+        }
+    }
+}
+```
+
 ## What does this feature do?
 
 This feature:
 
 1. **Installs yadm**: Downloads and installs the latest version of yadm from the official repository
 2. **Clones dotfiles repository** (optional): If a `repositoryUrl` is provided, it will run `yadm clone <url>` to set up your dotfiles
+3. **Handles localClass option** (optional): If the `localClass` option is specified, it will run `yadm config local.class <localClass>` to set a custom class for your local machine. This allows you to apply machine-specific configuration files based on the class name.
 
 ## About yadm
 
