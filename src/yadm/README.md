@@ -14,7 +14,7 @@ To simply install yadm in an existing devcontainer:
  {
      "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
      "features": {
-        "ghcr.io/raginjason/features/yadm:1": {}
+        "ghcr.io/raginjason/features/yadm": {}
     }
 }
 ```
@@ -25,6 +25,7 @@ To simply install yadm in an existing devcontainer:
 |--------|------|---------|-------------|
 | `repositoryUrl` | string | `""` | The URL of the git repository to clone with yadm. If specified, `yadm clone <repositoryUrl>` will be executed after yadm is installed. |
 | `localClass`    | string | `""` | Optional class name for the local machine. If set, runs `yadm config local.class <localClass>` to enable machine-specific configuration. |
+| `overwriteExisting` | boolean | `false` | If true, existing files will be overwritten when cloning the dotfiles repository using `yadm checkout $HOME`. |
 
 ## Example with Repository URL
 
@@ -34,8 +35,9 @@ To add this feature to an existing devcontainer with your dotfiles:
 {
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
-        "ghcr.io/raginjason/features/yadm:1": {
-            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git"
+        "ghcr.io/raginjason/features/yadm": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git",
+            "overwriteExisting": true
         }
     }
 }
@@ -46,8 +48,9 @@ More likely, you will want your yadm dotfiles to be used in every dev container 
 ```json
 {
     "dev.containers.defaultFeatures": {
-        "ghcr.io/raginjason/features/yadm:1": {
-            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git"
+        "ghcr.io/raginjason/features/yadm": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git",
+            "overwriteExisting": true
         }
     }
 }
@@ -58,9 +61,10 @@ Or with a `local.class` as well
 ```json
 {
     "dev.containers.defaultFeatures": {
-        "ghcr.io/raginjason/features/yadm:1": {
+        "ghcr.io/raginjason/features/yadm": {
             "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git",
-            "localClass": "Work"
+            "localClass": "Work",
+            "overwriteExisting": true
         }
     }
 }
@@ -72,7 +76,8 @@ This feature:
 
 1. **Installs yadm**: Downloads and installs the latest version of yadm from the official repository
 2. **Clones dotfiles repository** (optional): If a `repositoryUrl` is provided, it will run `yadm clone <url>` to set up your dotfiles
-3. **Handles localClass option** (optional): If the `localClass` option is specified, it will run `yadm config local.class <localClass>` to set a custom class for your local machine. This allows you to apply machine-specific configuration files based on the class name.
+3. **Overwrites existing files** (optional): If `overwriteExisting` is set to true, it will run `yadm checkout $HOME` after cloning to overwrite any existing files with versions from your dotfiles repository
+4. **Handles localClass option** (optional): If the `localClass` option is specified, it will run `yadm config local.class <localClass>` to set a custom class for your local machine. This allows you to apply machine-specific configuration files based on the class name.
 
 ## About yadm
 

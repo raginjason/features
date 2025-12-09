@@ -14,6 +14,11 @@
             "type": "string",
             "default": "",
             "description": "Yadm config local.class value. If provided, 'yadm config local.class <localClass>' will be executed after clone."
+        },
+        "overwriteExisting": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, existing files will be overwritten when cloning the dotfiles repository using 'yadm checkout $HOME'."
         }
     },
     "installsAfter": [

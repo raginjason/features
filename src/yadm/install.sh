@@ -8,6 +8,7 @@ echo "Activating feature 'yadm'"
 # The options will be available as env vars in install.sh
 REPOSITORY_URL="${REPOSITORYURL:-}"
 LOCAL_CLASS="${LOCALCLASS:-}"
+OVERWRITE_EXISTING="${OVERWRITEEXISTING:-false}"
 
 # Dependencies (curl and git) should be available via common-utils and git features
 
@@ -41,6 +42,12 @@ if [ -n "${REPOSITORY_URL}" ]; then
             su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
             set -e
 
+            # Overwrite existing files if requested
+            if [ "${OVERWRITE_EXISTING}" = "true" ]; then
+                echo "Overwriting existing files with dotfiles from repository..."
+                su - "${NON_ROOT_USER}" -c "yadm checkout \$HOME"
+            fi
+
             # Configure local.class if provided
             if [ -n "${LOCAL_CLASS}" ]; then
                 echo "Setting yadm local.class to: ${LOCAL_CLASS}"
@@ -57,6 +64,12 @@ if [ -n "${REPOSITORY_URL}" ]; then
         set +e
         yadm clone "${REPOSITORY_URL}"
         set -e
+
+        # Overwrite existing files if requested
+        if [ "${OVERWRITE_EXISTING}" = "true" ]; then
+            echo "Overwriting existing files with dotfiles from repository..."
+            yadm checkout $HOME
+        fi
 
         # Configure local.class if provided
         if [ -n "${LOCAL_CLASS}" ]; then
