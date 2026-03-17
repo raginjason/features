@@ -1,7 +1,7 @@
 {
     "name": "Yet Another Dotfiles Manager (yadm)",
     "id": "yadm",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Install yadm (Yet Another Dotfiles Manager) for managing dotfiles in a git repository",
     "documentationURL": "https://yadm.io/",
     "options": {
@@ -19,6 +19,11 @@
             "type": "boolean",
             "default": false,
             "description": "If true, existing files will be overwritten when cloning the dotfiles repository using 'yadm checkout $HOME'."
+        },
+        "decryptOnClone": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, run 'yadm decrypt' after clone when an encrypted yadm archive exists (e.g. $HOME/.local/share/yadm/archive). Requires GPG keys/agent available in the container."
         }
     },
     "installsAfter": [

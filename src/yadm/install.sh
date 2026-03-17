@@ -9,6 +9,9 @@ echo "Activating feature 'yadm'"
 REPOSITORY_URL="${REPOSITORYURL:-}"
 LOCAL_CLASS="${LOCALCLASS:-}"
 OVERWRITE_EXISTING="${OVERWRITEEXISTING:-false}"
+DECRYPT_ON_CLONE="${DECRYPTONCLONE:-false}"
+
+YADM_ARCHIVE_RELATIVE_PATH=".local/share/yadm/archive"
 
 # Dependencies (curl and git) should be available via common-utils and git features
 
@@ -42,6 +45,15 @@ if [ -n "${REPOSITORY_URL}" ]; then
             su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
             set -e
 
+            if [ "${DECRYPT_ON_CLONE}" = "true" ]; then
+                echo "decryptOnClone enabled; attempting yadm decrypt (if archive exists)..."
+                if su - "${NON_ROOT_USER}" -c "[ -f \"\$HOME/${YADM_ARCHIVE_RELATIVE_PATH}\" ]"; then
+                    su - "${NON_ROOT_USER}" -c "yadm decrypt"
+                else
+                    echo "No yadm archive found at \$HOME/${YADM_ARCHIVE_RELATIVE_PATH}; skipping decrypt."
+                fi
+            fi
+
             # Overwrite existing files if requested
             if [ "${OVERWRITE_EXISTING}" = "true" ]; then
                 echo "Overwriting existing files with dotfiles from repository..."
@@ -64,6 +76,15 @@ if [ -n "${REPOSITORY_URL}" ]; then
         set +e
         yadm clone "${REPOSITORY_URL}"
         set -e
+
+        if [ "${DECRYPT_ON_CLONE}" = "true" ]; then
+            echo "decryptOnClone enabled; attempting yadm decrypt (if archive exists)..."
+            if [ -f "$HOME/${YADM_ARCHIVE_RELATIVE_PATH}" ]; then
+                yadm decrypt
+            else
+                echo "No yadm archive found at $HOME/${YADM_ARCHIVE_RELATIVE_PATH}; skipping decrypt."
+            fi
+        fi
 
         # Overwrite existing files if requested
         if [ "${OVERWRITE_EXISTING}" = "true" ]; then
