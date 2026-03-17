@@ -1,6 +1,9 @@
 {
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
-        "yadm": {}
+        "yadm": {
+            "repositoryUrl": "",
+            "decryptOnClone": true
+        }
     }
 }

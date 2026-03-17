@@ -26,6 +26,7 @@ To simply install yadm in an existing devcontainer:
 | `repositoryUrl` | string | `""` | The URL of the git repository to clone with yadm. If specified, `yadm clone <repositoryUrl>` will be executed after yadm is installed. |
 | `localClass`    | string | `""` | Optional class name for the local machine. If set, runs `yadm config local.class <localClass>` to enable machine-specific configuration. |
 | `overwriteExisting` | boolean | `false` | If true, existing files will be overwritten when cloning the dotfiles repository using `yadm checkout $HOME`. |
+| `decryptOnClone` | boolean | `false` | If true, runs `yadm decrypt` after cloning when an encrypted yadm archive exists (typically `$HOME/.local/share/yadm/archive`). This is intended for GPG recipient-based yadm encryption. |
 
 ## Example with Repository URL
 
@@ -69,6 +70,32 @@ Or with a `local.class` as well
     }
 }
 ```
+
+## Encrypted dotfiles (yadm + GPG)
+
+yadm supports encrypting selected files into an archive committed to your dotfiles repo. To restore encrypted files on a new machine/container, you must run `yadm decrypt`. This feature can do that automatically during setup when `decryptOnClone` is enabled.
+
+Recommended setup is **asymmetric (GPG recipient) encryption** so you don't need to pass a password into the container. See [yadm encryption documentation](https://yadm.io/docs/encryption#).
+
+Example feature config:
+
+```json
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/raginjason/features/yadm": {
+            "repositoryUrl": "https://github.com/your-user/your-dotfiles-repo.git",
+            "decryptOnClone": true,
+            "overwriteExisting": true
+        }
+    }
+}
+```
+
+Notes:
+
+- The encrypted archive is typically stored at `$HOME/.local/share/yadm/archive`. If it doesn't exist, the feature will skip decrypt even if `decryptOnClone` is true.
+- If decryption fails, you likely need to make your GPG identity available inside the devcontainer (for example via GPG agent forwarding or by providing keys through your dev environment).
 
 ## What does this feature do?
 
