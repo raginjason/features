@@ -1,7 +1,7 @@
 {
     "name": "Yet Another Dotfiles Manager (yadm)",
     "id": "yadm",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Install yadm (Yet Another Dotfiles Manager) for managing dotfiles in a git repository",
     "documentationURL": "https://yadm.io/",
     "options": {
@@ -23,9 +23,10 @@
         "decryptOnClone": {
             "type": "boolean",
             "default": false,
-            "description": "If true, run 'yadm decrypt' after clone when an encrypted yadm archive exists (e.g. $HOME/.local/share/yadm/archive). Requires GPG keys/agent available in the container."
+            "description": "If true, run 'yadm decrypt' during postCreate lifecycle phase when an encrypted yadm archive exists (e.g. $HOME/.local/share/yadm/archive). Requires GPG keys/agent to be available during container postCreate phase."
         }
     },
+    "postCreateCommand": "/usr/local/share/yadm-decrypt.sh",
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils",
         "ghcr.io/devcontainers/features/git"

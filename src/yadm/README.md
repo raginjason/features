@@ -73,7 +73,9 @@ Or with a `local.class` as well
 
 ## Encrypted dotfiles (yadm + GPG)
 
-yadm supports encrypting selected files into an archive committed to your dotfiles repo. To restore encrypted files on a new machine/container, you must run `yadm decrypt`. This feature can do that automatically during setup when `decryptOnClone` is enabled.
+yadm supports encrypting selected files into an archive committed to your dotfiles repo. To restore encrypted files on a new machine/container, you must run `yadm decrypt`. This feature can do that automatically when `decryptOnClone` is enabled.
+
+**Important:** The decrypt operation runs during the **postCreate** container lifecycle phase (after feature installation), ensuring that GPG keys and agents are available. This means encryption/decryption setup should be configured before or during the postCreate phase.
 
 Recommended setup is **asymmetric (GPG recipient) encryption** so you don't need to pass a password into the container. See [yadm encryption documentation](https://yadm.io/docs/encryption#).
 
@@ -94,8 +96,10 @@ Example feature config:
 
 Notes:
 
-- The encrypted archive is typically stored at `$HOME/.local/share/yadm/archive`. If it doesn't exist, the feature will skip decrypt even if `decryptOnClone` is true.
-- If decryption fails, you likely need to make your GPG identity available inside the devcontainer (for example via GPG agent forwarding or by providing keys through your dev environment).
+- The encrypted archive is typically stored at `$HOME/.local/share/yadm/archive`. If it doesn't exist, the decrypt operation will be skipped even if `decryptOnClone` is true.
+- **Timing:** The decrypt operation runs during the `postCreateCommand` lifecycle phase, after container creation when GPG services are typically available.
+- **GPG Setup:** Ensure your GPG identity is available inside the devcontainer before the decrypt operation. This can be done via GPG agent forwarding, environment variables, or devcontainer setup scripts.
+- **Troubleshooting:** If decryption fails, check that GPG keys are properly configured and available in the container environment. You can manually run `yadm decrypt` to test GPG setup.
 
 ## What does this feature do?
 
@@ -105,6 +109,7 @@ This feature:
 2. **Clones dotfiles repository** (optional): If a `repositoryUrl` is provided, it will run `yadm clone <url>` to set up your dotfiles
 3. **Overwrites existing files** (optional): If `overwriteExisting` is set to true, it will run `yadm checkout $HOME` after cloning to overwrite any existing files with versions from your dotfiles repository
 4. **Handles localClass option** (optional): If the `localClass` option is specified, it will run `yadm config local.class <localClass>` to set a custom class for your local machine. This allows you to apply machine-specific configuration files based on the class name.
+5. **Decrypts encrypted files** (optional): If `decryptOnClone` is enabled and an encrypted archive exists, it will run `yadm decrypt` during the postCreate lifecycle phase when GPG services are available.
 
 ## About yadm
 

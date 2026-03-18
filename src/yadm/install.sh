@@ -45,15 +45,6 @@ if [ -n "${REPOSITORY_URL}" ]; then
             su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
             set -e
 
-            if [ "${DECRYPT_ON_CLONE}" = "true" ]; then
-                echo "decryptOnClone enabled; attempting yadm decrypt (if archive exists)..."
-                if su - "${NON_ROOT_USER}" -c "[ -f \"\$HOME/${YADM_ARCHIVE_RELATIVE_PATH}\" ]"; then
-                    su - "${NON_ROOT_USER}" -c "yadm decrypt"
-                else
-                    echo "No yadm archive found at \$HOME/${YADM_ARCHIVE_RELATIVE_PATH}; skipping decrypt."
-                fi
-            fi
-
             # Overwrite existing files if requested
             if [ "${OVERWRITE_EXISTING}" = "true" ]; then
                 echo "Overwriting existing files with dotfiles from repository..."
@@ -77,15 +68,6 @@ if [ -n "${REPOSITORY_URL}" ]; then
         yadm clone "${REPOSITORY_URL}"
         set -e
 
-        if [ "${DECRYPT_ON_CLONE}" = "true" ]; then
-            echo "decryptOnClone enabled; attempting yadm decrypt (if archive exists)..."
-            if [ -f "$HOME/${YADM_ARCHIVE_RELATIVE_PATH}" ]; then
-                yadm decrypt
-            else
-                echo "No yadm archive found at $HOME/${YADM_ARCHIVE_RELATIVE_PATH}; skipping decrypt."
-            fi
-        fi
-
         # Overwrite existing files if requested
         if [ "${OVERWRITE_EXISTING}" = "true" ]; then
             echo "Overwriting existing files with dotfiles from repository..."
@@ -103,5 +85,10 @@ if [ -n "${REPOSITORY_URL}" ]; then
 else
     echo "No repository URL provided. You can clone your dotfiles later with: yadm clone <repository-url>"
 fi
+
+# Copy decrypt script for postCreateCommand lifecycle hook
+echo "Installing yadm decrypt script for postCreateCommand..."
+cp ./yadm-decrypt.sh /usr/local/share/yadm-decrypt.sh
+chmod +x /usr/local/share/yadm-decrypt.sh
 
 echo "yadm feature installation complete!"
