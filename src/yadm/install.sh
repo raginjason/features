@@ -91,4 +91,8 @@ echo "Installing yadm decrypt script for postCreateCommand..."
 cp ./yadm-decrypt.sh /usr/local/share/yadm-decrypt.sh
 chmod +x /usr/local/share/yadm-decrypt.sh
 
+# Store decryptOnClone setting for postCreate phase
+echo "Storing decryptOnClone setting for postCreate..."
+echo "${DECRYPT_ON_CLONE}" > /usr/local/share/yadm-config-decrypt-on-clone
+
 echo "yadm feature installation complete!"

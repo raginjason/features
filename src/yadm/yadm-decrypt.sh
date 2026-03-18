@@ -7,8 +7,14 @@ set -e
 
 echo "Running yadm decrypt lifecycle script..."
 
+# Read decryptOnClone setting from stored config file
+DECRYPT_ON_CLONE="false"
+if [ -f "/usr/local/share/yadm-config-decrypt-on-clone" ]; then
+    DECRYPT_ON_CLONE=$(cat /usr/local/share/yadm-config-decrypt-on-clone)
+fi
+
 # Check if decryptOnClone is enabled
-if [ "${DECRYPTONCLONE:-false}" != "true" ]; then
+if [ "${DECRYPT_ON_CLONE}" != "true" ]; then
     echo "decryptOnClone is disabled; skipping decrypt operation."
     exit 0
 fi
