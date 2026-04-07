@@ -5,14 +5,6 @@ set -e
 # Activate feature 'yadm'
 echo "Activating feature 'yadm'"
 
-# The options will be available as env vars in install.sh
-REPOSITORY_URL="${REPOSITORYURL:-}"
-LOCAL_CLASS="${LOCALCLASS:-}"
-OVERWRITE_EXISTING="${OVERWRITEEXISTING:-false}"
-DECRYPT_ON_CLONE="${DECRYPTONCLONE:-false}"
-
-YADM_ARCHIVE_RELATIVE_PATH=".local/share/yadm/archive"
-
 # Dependencies (curl and git) should be available via common-utils and git features
 
 # Install yadm
@@ -31,68 +23,19 @@ fi
 echo "yadm installed successfully"
 yadm version
 
-# Clone repository if URL is provided
-if [ -n "${REPOSITORY_URL}" ]; then
-    echo "Cloning dotfiles repository: ${REPOSITORY_URL}"
-    
-    # Create a non-root user context for yadm operations if we're running as root
-    if [ "$(id -u)" = "0" ]; then
-        # Check if there's a non-root user available
-        if getent passwd 1000 > /dev/null 2>&1; then
-            NON_ROOT_USER=$(getent passwd 1000 | cut -d: -f1)
-            echo "Running yadm clone as user: ${NON_ROOT_USER}"
-            set +e
-            su - "${NON_ROOT_USER}" -c "yadm clone '${REPOSITORY_URL}'"
-            set -e
+# Stage postCreate scripts
+echo "Staging postCreate scripts..."
+cp "$(dirname "$0")/yadm-setup.sh" /usr/local/share/yadm-setup.sh
+cp "$(dirname "$0")/yadm-decrypt.sh" /usr/local/share/yadm-decrypt.sh
+chmod +x /usr/local/share/yadm-setup.sh /usr/local/share/yadm-decrypt.sh
 
-            # Overwrite existing files if requested
-            if [ "${OVERWRITE_EXISTING}" = "true" ]; then
-                echo "Overwriting existing files with dotfiles from repository..."
-                su - "${NON_ROOT_USER}" -c "yadm checkout \$HOME"
-            fi
-
-            # Configure local.class if provided
-            if [ -n "${LOCAL_CLASS}" ]; then
-                echo "Setting yadm local.class to: ${LOCAL_CLASS}"
-                su - "${NON_ROOT_USER}" -c "yadm config local.class '${LOCAL_CLASS}'"
-            fi
-
-            su - "${NON_ROOT_USER}" -c "yadm status"
-        else
-            echo "Warning: Running as root. Consider creating a non-root user for yadm operations."
-            echo "You can run 'yadm clone ${REPOSITORY_URL}' manually after container setup."
-        fi
-    else
-        # We're not root, so run yadm clone directly
-        set +e
-        yadm clone "${REPOSITORY_URL}"
-        set -e
-
-        # Overwrite existing files if requested
-        if [ "${OVERWRITE_EXISTING}" = "true" ]; then
-            echo "Overwriting existing files with dotfiles from repository..."
-            yadm checkout $HOME
-        fi
-
-        # Configure local.class if provided
-        if [ -n "${LOCAL_CLASS}" ]; then
-            echo "Setting yadm local.class to: ${LOCAL_CLASS}"
-            yadm config local.class "${LOCAL_CLASS}"
-        fi
-
-        yadm status
-    fi
-else
-    echo "No repository URL provided. You can clone your dotfiles later with: yadm clone <repository-url>"
-fi
-
-# Copy decrypt script for postCreateCommand lifecycle hook
-echo "Installing yadm decrypt script for postCreateCommand..."
-cp ./yadm-decrypt.sh /usr/local/share/yadm-decrypt.sh
-chmod +x /usr/local/share/yadm-decrypt.sh
-
-# Store decryptOnClone setting for postCreate phase
-echo "Storing decryptOnClone setting for postCreate..."
-echo "${DECRYPT_ON_CLONE}" > /usr/local/share/yadm-config-decrypt-on-clone
+# Persist feature options for postCreate
+echo "Storing feature options for postCreate..."
+cat > /usr/local/share/yadm-config <<EOF
+export REPOSITORYURL="${REPOSITORYURL}"
+export OVERWRITEEXISTING="${OVERWRITEEXISTING}"
+export LOCALCLASS="${LOCALCLASS}"
+export DECRYPTONCLONE="${DECRYPTONCLONE}"
+EOF
 
 echo "yadm feature installation complete!"
