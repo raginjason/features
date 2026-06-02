@@ -36,6 +36,7 @@ export REPOSITORYURL="${REPOSITORYURL}"
 export OVERWRITEEXISTING="${OVERWRITEEXISTING}"
 export LOCALCLASS="${LOCALCLASS}"
 export DECRYPT="${DECRYPT}"
+export BOOTSTRAP="${BOOTSTRAP}"
 EOF
 
 echo "yadm feature installation complete!"

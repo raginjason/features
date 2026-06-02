@@ -16,6 +16,7 @@ fi
 REPOSITORY_URL="${REPOSITORYURL:-}"
 LOCAL_CLASS="${LOCALCLASS:-}"
 OVERWRITE_EXISTING="${OVERWRITEEXISTING:-false}"
+BOOTSTRAP="${BOOTSTRAP:-false}"
 
 if [ -n "${REPOSITORY_URL}" ]; then
     echo "Cloning dotfiles repository: ${REPOSITORY_URL}"
@@ -64,7 +65,22 @@ else
     echo "No repository URL provided. You can clone your dotfiles later with: yadm clone <repository-url>"
 fi
 
-# Run decrypt script (self-gates on DECRYPTONCLONE setting)
+# Run decrypt script (self-gates on DECRYPT setting)
 /usr/local/share/yadm-decrypt.sh
+
+if [ "${BOOTSTRAP}" = "true" ] && [ -n "${REPOSITORY_URL}" ]; then
+    if [ "$(id -u)" = "0" ]; then
+        if getent passwd 1000 > /dev/null 2>&1; then
+            NON_ROOT_USER=$(getent passwd 1000 | cut -d: -f1)
+            echo "Running yadm bootstrap as user: ${NON_ROOT_USER}"
+            su - "${NON_ROOT_USER}" -c "yadm bootstrap"
+        else
+            echo "Warning: Running as root with no non-root user. Skipping yadm bootstrap."
+        fi
+    else
+        echo "Running yadm bootstrap..."
+        yadm bootstrap
+    fi
+fi
 
 echo "yadm setup lifecycle script complete!"
