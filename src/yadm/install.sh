@@ -35,7 +35,7 @@ cat > /usr/local/share/yadm-config <<EOF
 export REPOSITORYURL="${REPOSITORYURL}"
 export OVERWRITEEXISTING="${OVERWRITEEXISTING}"
 export LOCALCLASS="${LOCALCLASS}"
-export DECRYPTONCLONE="${DECRYPTONCLONE}"
+export DECRYPT="${DECRYPT}"
 EOF
 
 echo "yadm feature installation complete!"

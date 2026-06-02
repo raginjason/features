@@ -12,15 +12,15 @@ if [ -f "/usr/local/share/yadm-config" ]; then
     # shellcheck source=/dev/null
     source /usr/local/share/yadm-config
 fi
-DECRYPT_ON_CLONE="${DECRYPTONCLONE:-false}"
+DECRYPT="${DECRYPT:-false}"
 
-# Check if decryptOnClone is enabled
-if [ "${DECRYPT_ON_CLONE}" != "true" ]; then
-    echo "decryptOnClone is disabled; skipping decrypt operation."
+# Check if decrypt is enabled
+if [ "${DECRYPT}" != "true" ]; then
+    echo "decrypt is disabled; skipping decrypt operation."
     exit 0
 fi
 
-echo "decryptOnClone is enabled; checking for yadm archive..."
+echo "decrypt is enabled; checking for yadm archive..."
 
 YADM_ARCHIVE_RELATIVE_PATH=".local/share/yadm/archive"
 

@@ -20,7 +20,7 @@
             "default": false,
             "description": "If true, existing files will be overwritten when cloning the dotfiles repository using 'yadm checkout $HOME'."
         },
-        "decryptOnClone": {
+        "decrypt": {
             "type": "boolean",
             "default": false,
             "description": "If true, run 'yadm decrypt' during postCreate lifecycle phase when an encrypted yadm archive exists (e.g. $HOME/.local/share/yadm/archive). Requires GPG keys/agent to be available during container postCreate phase."
